@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import docx; print\\(docx.__file__\\)\")",
+      "Bash(node -e \"require\\('dotenv'\\).config\\(\\); const k=process.env.GEMINI_API_KEY; console.log\\('present:', !!k, 'length:', k ? k.length : 0\\)\")",
+      "Bash(node -e \"require\\('dotenv'\\).config\\(\\); const k=process.env.GEMINI_API_KEY; console.log\\('prefix:', k.slice\\(0,6\\)\\); console.log\\('has_quotes:', /[\\\\\"']/.test\\(k\\)\\); console.log\\('has_whitespace:', /\\\\s/.test\\(k\\)\\); console.log\\('trimmed_len_diff:', k.length - k.trim\\(\\).length\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(npx tsx *)",
+      "Bash(npx tsc *)"
+    ]
+  }
+}
