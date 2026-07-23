@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { ask } from "./llm/gemini.js";
+import { ask } from "./llm/openai.js";
 
 const systemPrompt = `You are the WhatsApp assistant for Dr. Khoury Dental Clinic in Tripoli.
 Hours: Monday to Friday, 9am to 6pm. Closed weekends.

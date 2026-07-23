@@ -28,7 +28,7 @@ Think "bot factory," not "a bot."
 - **Zod** for request validation
 - **Prisma + PostgreSQL** (coming — not built yet)
 - **BullMQ + Redis** for the job queue (coming — not built yet)
-- Runtime LLM: **Claude** (initial, using existing credits — cheap tier only), swappable to **OpenAI** or **Gemini** via the same interface. OpenAI/Gemini use an OpenAI-compatible client.
+- Runtime LLM: **OpenAI** (initial, cheap tier only — e.g. `gpt-4o-mini`), swappable to **Claude** or **Gemini** via the same interface. OpenAI/Gemini use an OpenAI-compatible client.
 
 ## Non-negotiable rules
 
@@ -36,9 +36,9 @@ Think "bot factory," not "a bot."
 
 2. **Providers go behind interfaces, chosen via config/env.** The LLM provider and the WhatsApp provider are both swappable. Never hardcode a specific provider (OpenAI, Gemini, Meta) inside business logic. Business logic depends on an interface; the concrete provider is selected from an env var.
 
-3. **Claude is an allowed runtime LLM for now — behind the same interface as everything else.** I have Claude API credits, so the running bot may use Claude as its LLM provider initially. I plan to swap to OpenAI or Gemini later, so Claude must sit behind the `LLMProvider` interface like any other provider — NEVER hardcoded into business logic. The swap must be a one-line env change, not a refactor.
-   - **Cost caution:** for the bot's short customer-service replies, use a **cheap** Claude model (e.g. Haiku tier), NOT the expensive Fable/Opus tiers. Reserve the pricey models for development help, not runtime traffic. Always cap `max_tokens`.
-   - Keep OpenAI and Gemini implementations of the interface ready so switching providers is trivial.
+3. **OpenAI is the active runtime LLM for now — behind the same interface as everything else.** The running bot uses OpenAI as its LLM provider initially. I may swap to Claude or Gemini later, so OpenAI must sit behind the `LLMProvider` interface like any other provider — NEVER hardcoded into business logic. The swap must be a one-line env change, not a refactor.
+   - **Cost caution:** for the bot's short customer-service replies, use a **cheap** OpenAI model (e.g. `gpt-4o-mini`), NOT the expensive flagship tiers. Reserve the pricey models for development help, not runtime traffic. Always cap `max_tokens`.
+   - Keep Claude and Gemini implementations of the interface ready so switching providers is trivial.
 
 4. **Config crashes on boot if misconfigured.** Required env vars are validated at startup via a `required()` helper; the app refuses to start if one is missing. Never read `process.env` directly in business code — read from the validated `config` object.
 
@@ -62,7 +62,7 @@ Think "bot factory," not "a bot."
 
 ## Roadmap (rough order — we do these one at a time, and I approve each)
 
-1. LLM provider **interface** (`LLMProvider`) with **Claude, OpenAI, and Gemini** implementations, selected via `LLM_PROVIDER` / `LLM_MODEL` env vars. Claude is the initial active provider (cheap tier). Keep current `ask` behavior.
+1. LLM provider **interface** (`LLMProvider`) with **OpenAI, Claude, and Gemini** implementations, selected via `LLM_PROVIDER` / `LLM_MODEL` env vars. OpenAI is the initial active provider (cheap tier). Keep current `ask` behavior.
 2. WhatsApp provider **interface** + a **simulator** implementation (fake incoming/outgoing) so the full loop works with no real number. Meta implementation stubbed for later.
 3. Postgres + Prisma — replace the in-memory/hardcoded stores. Every table has `tenantId`.
 4. The conversation loop as a service: `handleIncoming(tenantId, from, text)` → store → LLM → store → send.

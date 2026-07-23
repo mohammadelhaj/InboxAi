@@ -7,5 +7,5 @@ function required(key: string): string {
 export const config = {
   port: Number(process.env.PORT ?? 3000),
   nodeEnv: required("NODE_ENV"),
-  geminiApiKey: required("GEMINI_API_KEY"),
+  openaiApiKey: required("OPENAI_API_KEY"),
 };
